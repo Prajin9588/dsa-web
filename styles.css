@@ -8,4 +8,10 @@
 .note-chip.mistakes{background:#fff0f1;color:#cb383e;border:1px solid #f6d1d4}
 .note-chip.notes{background:#f0f3ff;color:#4559d7;border:1px solid #d5dcfa}
 .autosave-indicator{font-size:10px;color:#8592a8;font-weight:600;padding:0 6px}
+.queue-snippet{font-size:9px;color:#7a6d3f;background:#fffdf3;border:1px solid #faeecd;padding:2px 6px;border-radius:4px;margin-top:4px;max-width:380px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:inline-block}
+.due-card-intuition{margin-top:8px;font-size:10px;line-height:1.5;color:#4a566d;background:#f8f9fe;border-left:3px solid #5769e8;padding:6px 9px;border-radius:0 6px 6px 0}
+.due-card-intuition strong{color:#29354e}
+.due-card-mistakes{margin-top:6px;font-size:10px;line-height:1.5;color:#8c3a3e;background:#fff6f6;border-left:3px solid #e15b61;padding:6px 9px;border-radius:0 6px 6px 0}
+.due-card-mistakes strong{color:#c43339}
+
 

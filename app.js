@@ -406,11 +406,15 @@
       ? queue.map(p => {
           const s = stateOf(p);
           const hasNotes = Boolean(s.intuition || s.mistakes || s.notes);
+          const snippet = s.intuition
+            ? `<div class="queue-snippet" title="${esc(s.intuition)}">💡 ${esc(s.intuition)}</div>`
+            : (s.mistakes ? `<div class="queue-snippet" title="${esc(s.mistakes)}">⚠️ ${esc(s.mistakes)}</div>` : '');
           return `<div class="queue-item">
             <span class="queue-color ${statusOf(p)}"></span>
             <div>
               <div class="queue-title" title="${esc(p.name)}">${esc(p.name)}</div>
               <div class="queue-meta">${esc(p.topic)} · ${esc(dueInfo(p).text)}${hasNotes ? ' · 📝 Notes saved' : ''}</div>
+              ${snippet}
             </div>
             <div class="queue-actions">
               ${statusPill(statusOf(p))}
@@ -425,9 +429,27 @@
     const q = $('#search-input').value.trim().toLowerCase();
     const topic = $('#topic-filter').value;
     const status = $('#status-filter').value;
-    return (!q || `${p.name} ${p.topic} ${p.difficulty || ''}`.toLowerCase().includes(q)) &&
-      (topic === 'all' || p.topic === topic) &&
-      (status === 'all' || statusOf(p) === status);
+    const s = stateOf(p);
+
+    const matchesSearch = !q ||
+      `${p.name} ${p.topic} ${p.difficulty || ''} ${s.intuition || ''} ${s.mistakes || ''} ${s.notes || ''} ${s.approach || ''}`.toLowerCase().includes(q);
+
+    const matchesTopic = (topic === 'all' || p.topic === topic);
+
+    let matchesStatus = true;
+    if (status === 'all') {
+      matchesStatus = true;
+    } else if (status === 'has-notes') {
+      matchesStatus = Boolean(s.intuition || s.notes || s.approach);
+    } else if (status === 'has-mistakes') {
+      matchesStatus = Boolean(s.mistakes);
+    } else if (status === 'due-only') {
+      matchesStatus = isDue(p);
+    } else {
+      matchesStatus = statusOf(p) === status;
+    }
+
+    return matchesSearch && matchesTopic && matchesStatus;
   }
 
   function renderTable() {
@@ -435,6 +457,10 @@
     const sort = $('#sort-filter').value;
     if (sort === 'name') list.sort((a, b) => a.name.localeCompare(b.name));
     if (sort === 'due') list.sort((a, b) => (dueDate(a) || '9999').localeCompare(dueDate(b) || '9999'));
+    if (sort === 'status') {
+      const order = { red: 0, yellow: 1, green: 2, none: 3 };
+      list.sort((a, b) => (order[statusOf(a)] ?? 3) - (order[statusOf(b)] ?? 3));
+    }
     if (sort === 'recent') list.sort((a, b) => (stateOf(b).updated || '').localeCompare(stateOf(a).updated || ''));
 
     $('#results-count').textContent = `${list.length} problem${list.length === 1 ? '' : 's'}`;
@@ -489,11 +515,19 @@
       ? due.map(p => {
           const s = stateOf(p);
           const hasNotes = Boolean(s.intuition || s.mistakes || s.notes);
+          const intuitionBlock = s.intuition
+            ? `<div class="due-card-intuition"><strong>💡 Intuition:</strong> ${esc(s.intuition)}</div>`
+            : '';
+          const mistakesBlock = s.mistakes
+            ? `<div class="due-card-mistakes"><strong>⚠️ Mistakes to avoid:</strong> ${esc(s.mistakes)}</div>`
+            : '';
           return `<div class="due-card">
             <span class="queue-color ${statusOf(p)}"></span>
             <div class="due-card-main">
               <h3>${esc(p.name)}</h3>
               <p>${esc(p.topic)} · ${esc(dueInfo(p).text)}${hasNotes ? ' · 📝 Notes saved' : ''}</p>
+              ${intuitionBlock}
+              ${mistakesBlock}
             </div>
             ${statusPill(statusOf(p))}
             <div class="due-card-actions">
@@ -840,6 +874,12 @@
 
   // Form Submissions
   $('#dialog-form').addEventListener('submit', saveProblem);
+  $('#dialog-form').addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      $('#dialog-form').requestSubmit();
+    }
+  });
   $('#add-form').addEventListener('submit', addProblem);
 
   // Autosave while typing in note dialog
