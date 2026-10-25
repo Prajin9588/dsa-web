@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f7f8fc" />
+  <title>DSA Revision Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#top" aria-label="DSA Revision Hub home">
+        <span class="brand-mark">{ }</span>
+        <span><strong>DSA Revision</strong><small>HUB</small></span>
+      </a>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-item active" data-view="dashboard"><span class="nav-icon">▦</span> Overview</button>
+      <button class="nav-item" data-view="problems"><span class="nav-icon">☷</span> All problems <span class="nav-count" id="sidebar-total">—</span></button>
+      <button class="nav-item" data-view="due"><span class="nav-icon">◷</span> Due for revision <span class="nav-count alert-count" id="sidebar-due">0</span></button>
+      <div class="side-label topic-label">TOPICS <button id="clear-topic" title="Show all topics">↺</button></div>
+      <div id="topic-list" class="topic-list"><div class="muted small">Loading topics…</div></div>
+      <div class="sidebar-bottom">
+        <div class="mini-progress-head"><span>Your progress</span><strong id="side-percent">0%</strong></div>
+        <div class="progress-track"><span id="side-progress"></span></div>
+        <p>Small revisions. Strong recall.</p>
+        <a href="https://github.com/Codensity30/Strivers-A2Z-DSA-Sheet" target="_blank" rel="noreferrer">Open source repository ↗</a>
+      </div>
+    </aside>
+
+    <main class="main-content" id="top">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark">{ }</span><strong>DSA Revision Hub</strong></div>
+        <div class="breadcrumbs">Workspace <span>/</span> <strong id="breadcrumb-current">Overview</strong></div>
+        <div class="top-actions">
+          <span class="sync-state" id="sync-state"><span class="sync-dot"></span> Connecting to GitHub…</span>
+          <button class="icon-button" id="export-btn" title="Export your progress">⇩</button>
+          <button class="avatar" title="Your local workspace">S</button>
+        </div>
+      </header>
+
+      <section class="page-heading">
+        <div>
+          <div class="eyebrow" id="today-label">YOUR LEARNING WORKSPACE</div>
+          <h1 id="page-title">Good practice starts with <span>recall.</span></h1>
+          <p id="page-subtitle">Track what you know, spot what needs work, and revisit it at the right time.</p>
+        </div>
+        <div class="heading-actions">
+          <button class="button secondary" id="refresh-btn">↻ <span>Sync repository</span></button>
+          <button class="button primary" id="add-btn">＋ Add problem</button>
+        </div>
+      </section>
+
+      <section class="stat-grid" aria-label="Progress summary">
+        <article class="stat-card"><div class="stat-top"><span class="stat-icon blue">▤</span><span class="stat-caption">IN YOUR SHEET</span></div><div class="stat-value" id="stat-total">—</div><div class="stat-foot">Problems imported from GitHub</div></article>
+        <article class="stat-card"><div class="stat-top"><span class="stat-icon green">✓</span><span class="stat-caption">SOLID RECALL</span></div><div class="stat-value" id="stat-green">0</div><div class="stat-foot"><span class="status-dot green-dot"></span> Green · solve independently</div></article>
+        <article class="stat-card"><div class="stat-top"><span class="stat-icon yellow">↻</span><span class="stat-caption">NEEDS PRACTICE</span></div><div class="stat-value" id="stat-yellow">0</div><div class="stat-foot"><span class="status-dot yellow-dot"></span> Yellow · revisit soon</div></article>
+        <article class="stat-card"><div class="stat-top"><span class="stat-icon red">!</span><span class="stat-caption">REBUILD CONCEPT</span></div><div class="stat-value" id="stat-red">0</div><div class="stat-foot"><span class="status-dot red-dot"></span> Red · needs another attempt</div></article>
+      </section>
+
+      <section id="dashboard-view" class="dashboard-layout">
+        <div class="panel focus-panel">
+          <div class="panel-heading"><div><h2>Revision queue</h2><p>What deserves your attention next</p></div><button class="text-button" data-view="due">View all ↗</button></div>
+          <div id="revision-queue" class="revision-queue"></div>
+        </div>
+        <div class="panel progress-panel">
+          <div class="panel-heading"><div><h2>Recall breakdown</h2><p>Be honest with your colors</p></div><span class="subtle-icon">◉</span></div>
+          <div class="donut-wrap"><div class="donut" id="donut"><div class="donut-center"><strong id="tracked-count">0</strong><span>tracked</span></div></div></div>
+          <div class="legend"><div><span class="legend-label"><i class="legend-dot green-bg"></i>Green</span><strong id="legend-green">0</strong></div><div><span class="legend-label"><i class="legend-dot yellow-bg"></i>Yellow</span><strong id="legend-yellow">0</strong></div><div><span class="legend-label"><i class="legend-dot red-bg"></i>Red</span><strong id="legend-red">0</strong></div><div><span class="legend-label"><i class="legend-dot grey-bg"></i>Not rated</span><strong id="legend-none">0</strong></div></div>
+          <div class="tip-box"><span>✦</span><p><strong>Recall rule</strong><br>Green only counts when you can explain the approach and code it without a hint.</p></div>
+        </div>
+        <div class="panel topics-panel"><div class="panel-heading"><div><h2>Topic progress</h2><p>Pick a topic and keep moving</p></div><button class="text-button" data-view="problems">All topics ↗</button></div><div id="topic-progress" class="topic-progress-list"></div></div>
+      </section>
+
+      <section id="problems-view" class="panel problems-panel hidden">
+        <div class="panel-heading problems-heading"><div><h2 id="list-heading">All problems</h2><p id="list-subheading">Search the sheet and update your recall status.</p></div><span class="results-count" id="results-count">0 problems</span></div>
+        <div class="filter-row">
+          <label class="search-box"><span>⌕</span><input id="search-input" type="search" placeholder="Search problems or topics…" autocomplete="off" /></label>
+          <select id="topic-filter" aria-label="Filter by topic"><option value="all">All topics</option></select>
+          <select id="status-filter" aria-label="Filter by status"><option value="all">All statuses</option><option value="none">Not rated</option><option value="green">Green · Solid</option><option value="yellow">Yellow · Revise</option><option value="red">Red · Relearn</option></select>
+          <select id="sort-filter" aria-label="Sort problems"><option value="topic">Topic order</option><option value="due">Revision due first</option><option value="recent">Recently updated</option><option value="name">Name A–Z</option></select>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>PROBLEM</th><th>TOPIC</th><th>RECALL STATUS</th><th>NEXT REVISION</th><th></th></tr></thead><tbody id="problem-table"></tbody></table></div>
+        <div id="empty-state" class="empty-state hidden"><span>⌕</span><h3>No problems found</h3><p>Try another search or clear your filters.</p><button class="button secondary" id="reset-filters">Clear filters</button></div>
+        <div class="table-footer"><span id="table-footer-count">Showing 0 problems</span><span>Changes save automatically in this browser</span></div>
+      </section>
+
+      <section id="due-view" class="panel problems-panel hidden">
+        <div class="panel-heading"><div><h2>Due for revision</h2><p>Red and yellow problems, plus anything whose review date has arrived.</p></div><span class="results-count" id="due-count">0 due</span></div>
+        <div id="due-list" class="due-list"></div>
+      </section>
+
+      <footer class="footer"><span>DSA Revision Hub <span class="footer-dot">·</span> Built for active recall</span><span>Your notes stay in this browser. <button id="backup-link" class="text-button">Back up data ↗</button></span></footer>
+    </main>
+  </div>
+
+  <dialog id="problem-dialog" class="problem-dialog">
+    <form method="dialog" id="dialog-form">
+      <div class="dialog-head"><div><div class="eyebrow">PROBLEM WORKSPACE</div><h2 id="dialog-title">Problem notes</h2><p id="dialog-topic" class="dialog-topic"></p></div><button class="close-button" value="cancel" aria-label="Close">×</button></div>
+      <div class="dialog-scroll">
+        <div class="problem-link-row"><a id="source-link" href="#" target="_blank" rel="noreferrer">Open source problem ↗</a><span id="last-reviewed" class="last-reviewed">Not reviewed yet</span></div>
+        <label class="field-label">Recall status</label>
+        <div class="status-picker"><label class="status-choice green-choice"><input type="radio" name="status" value="green"><span>✓</span><b>Green</b><small>I can solve independently</small></label><label class="status-choice yellow-choice"><input type="radio" name="status" value="yellow"><span>↻</span><b>Yellow</b><small>I need a reminder</small></label><label class="status-choice red-choice"><input type="radio" name="status" value="red"><span>!</span><b>Red</b><small>I need to relearn it</small></label></div>
+        <div class="form-grid"><label class="field"><span>Intuition / key idea</span><textarea id="note-intuition" rows="3" placeholder="What is the main observation? Explain it in your own words."></textarea></label><label class="field"><span>Approach / steps</span><textarea id="note-approach" rows="3" placeholder="Write the steps before looking at code."></textarea></label><label class="field half"><span>Time complexity</span><input id="note-time" placeholder="e.g. O(n log n)"></label><label class="field half"><span>Space complexity</span><input id="note-space" placeholder="e.g. O(1)"></label><label class="field"><span>Mistakes / edge cases</span><textarea id="note-mistakes" rows="2" placeholder="What went wrong? Which edge case did you miss?"></textarea></label><label class="field"><span>Personal notes</span><textarea id="note-extra" rows="3" placeholder="Hints, dry run, pattern, or anything to remember."></textarea></label><label class="field half"><span>Next revision date</span><input id="note-due" type="date"></label><label class="field half"><span>Problem link (editable)</span><input id="note-url" type="url" placeholder="https://…"></label></div>
+        <p class="save-hint">Tip: when you finish a revision, update the color honestly. Your changes are stored locally.</p>
+      </div>
+      <div class="dialog-actions"><button type="button" class="button danger-ghost" id="reset-status">Reset status</button><span class="dialog-spacer"></span><button type="button" class="button secondary" id="cancel-dialog">Cancel</button><button type="submit" class="button primary" id="save-problem">Save notes</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="add-dialog" class="problem-dialog add-dialog">
+    <form id="add-form" method="dialog"><div class="dialog-head"><div><div class="eyebrow">PERSONAL PRACTICE</div><h2>Add a problem</h2><p class="dialog-topic">Add questions that are not in the repository.</p></div><button class="close-button" value="cancel" aria-label="Close">×</button></div><div class="dialog-scroll"><div class="form-grid"><label class="field"><span>Problem name *</span><input id="add-name" required placeholder="e.g. Two Sum"></label><label class="field"><span>Topic *</span><input id="add-topic" required placeholder="e.g. Arrays"></label><label class="field"><span>Problem URL</span><input id="add-url" type="url" placeholder="https://…"></label></div></div><div class="dialog-actions"><span class="dialog-spacer"></span><button type="button" class="button secondary" id="cancel-add">Cancel</button><button type="submit" class="button primary">Add problem</button></div></form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
