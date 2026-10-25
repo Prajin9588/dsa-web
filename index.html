@@ -36,8 +36,10 @@
         <div class="mobile-brand"><span class="brand-mark">{ }</span><strong>DSA Revision Hub</strong></div>
         <div class="breadcrumbs">Workspace <span>/</span> <strong id="breadcrumb-current">Overview</strong></div>
         <div class="top-actions">
-          <span class="sync-state" id="sync-state"><span class="sync-dot"></span> Connecting to GitHub…</span>
+          <span class="sync-state" id="sync-state"><span class="sync-dot"></span> Loading library…</span>
+          <button class="icon-button" id="import-btn" title="Restore backup JSON">⇧</button>
           <button class="icon-button" id="export-btn" title="Export your progress">⇩</button>
+          <input type="file" id="import-file" accept=".json" style="display:none" />
           <button class="avatar" title="Your local workspace">S</button>
         </div>
       </header>
@@ -93,7 +95,7 @@
         <div id="due-list" class="due-list"></div>
       </section>
 
-      <footer class="footer"><span>DSA Revision Hub <span class="footer-dot">·</span> Built for active recall</span><span>Your notes stay in this browser. <button id="backup-link" class="text-button">Back up data ↗</button></span></footer>
+      <footer class="footer"><span>DSA Revision Hub <span class="footer-dot">·</span> Built for active recall</span><span>Your notes stay in this browser. <button id="backup-link" class="text-button">Back up data ↗</button> <span class="footer-dot">·</span> <button id="restore-link" class="text-button">Restore backup ↗</button></span></footer>
     </main>
   </div>
 
@@ -107,7 +109,7 @@
         <div class="form-grid"><label class="field"><span>Intuition / key idea</span><textarea id="note-intuition" rows="3" placeholder="What is the main observation? Explain it in your own words."></textarea></label><label class="field"><span>Approach / steps</span><textarea id="note-approach" rows="3" placeholder="Write the steps before looking at code."></textarea></label><label class="field half"><span>Time complexity</span><input id="note-time" placeholder="e.g. O(n log n)"></label><label class="field half"><span>Space complexity</span><input id="note-space" placeholder="e.g. O(1)"></label><label class="field"><span>Mistakes / edge cases</span><textarea id="note-mistakes" rows="2" placeholder="What went wrong? Which edge case did you miss?"></textarea></label><label class="field"><span>Personal notes</span><textarea id="note-extra" rows="3" placeholder="Hints, dry run, pattern, or anything to remember."></textarea></label><label class="field half"><span>Next revision date</span><input id="note-due" type="date"></label><label class="field half"><span>Problem link (editable)</span><input id="note-url" type="url" placeholder="https://…"></label></div>
         <p class="save-hint">Tip: when you finish a revision, update the color honestly. Your changes are stored locally.</p>
       </div>
-      <div class="dialog-actions"><button type="button" class="button danger-ghost" id="reset-status">Reset status</button><span class="dialog-spacer"></span><button type="button" class="button secondary" id="cancel-dialog">Cancel</button><button type="submit" class="button primary" id="save-problem">Save notes</button></div>
+      <div class="dialog-actions"><button type="button" class="button danger-ghost" id="reset-status">Reset status</button><button type="button" class="button danger-ghost hidden" id="delete-problem-btn">Delete problem</button><span id="dialog-autosave-indicator" class="autosave-indicator"></span><span class="dialog-spacer"></span><button type="button" class="button secondary" id="cancel-dialog">Cancel</button><button type="submit" class="button primary" id="save-problem">Save notes</button></div>
     </form>
   </dialog>
 
@@ -115,6 +117,7 @@
     <form id="add-form" method="dialog"><div class="dialog-head"><div><div class="eyebrow">PERSONAL PRACTICE</div><h2>Add a problem</h2><p class="dialog-topic">Add questions that are not in the repository.</p></div><button class="close-button" value="cancel" aria-label="Close">×</button></div><div class="dialog-scroll"><div class="form-grid"><label class="field"><span>Problem name *</span><input id="add-name" required placeholder="e.g. Two Sum"></label><label class="field"><span>Topic *</span><input id="add-topic" required placeholder="e.g. Arrays"></label><label class="field"><span>Problem URL</span><input id="add-url" type="url" placeholder="https://…"></label></div></div><div class="dialog-actions"><span class="dialog-spacer"></span><button type="button" class="button secondary" id="cancel-add">Cancel</button><button type="submit" class="button primary">Add problem</button></div></form>
   </dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

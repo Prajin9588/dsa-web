@@ -5,14 +5,16 @@ A lightweight, browser-based DSA tracker built with plain HTML, CSS and JavaScri
 ## Features
 
 - Dashboard with total, Green, Yellow and Red counts
+- Complete 364-problem Strivers A2Z DSA Sheet pre-bundled for offline readiness
+- Full persistence in `localStorage`: all problems, revision status, intuition, mistakes, and notes remain even after closing the browser tab and reopening
+- Live autosave while typing notes, plus automatic save before page unload
+- Visual badge chips (💡 Intuition, ⚠️ Mistakes, 📝 Notes) in the problem table
 - Topic sidebar, topic progress and searchable/filterable problem table
-- Green / Yellow / Red recall status
-- Notes for intuition, approach, time complexity, space complexity, mistakes and personal reminders
-- Revision dates and a due-for-revision queue
-- Add your own problems
-- Export a JSON backup
-- Uses `localStorage`; no login or backend required
-- Starter list is shown if GitHub cannot be reached; use **Sync repository** when online
+- Green / Yellow / Red recall status with suggested spaced repetition review dates
+- Detailed problem workspace: intuition, approach, time/space complexity, mistakes/edge cases, personal notes
+- Add custom problems and delete custom problems
+- Export and restore JSON backups anytime
+- Seamless background GitHub sync with graceful offline fallbacks that never wipe saved data
 
 ## Run locally
 
